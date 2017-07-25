@@ -17,7 +17,7 @@ library(readxl)
 library(ggplot2)
 
 source("/PC_Xfer/Quantification Script/Helper Functions.R")
-source("/PC_Xfer/Quantification Script/User Interface(1).R")
+source("/PC_Xfer/Quantification Script/User Interface.R")
 source("/PC_Xfer/Quantification Script/Compile Data For Galaxy.R")
 source("/PC_Xfer/Quantification Script/Error Checking.R")
 source("/PC_Xfer/Quantification Script/Talk to Galaxy.R")
