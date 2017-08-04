@@ -24,7 +24,24 @@ gen_sequence_data <- function(sequence_data, tf_sample_id){
   
   std_id <- seq_data$id[grep("stds", seq_data$id, ignore.case = TRUE)]
   sample_data <- seq_data[!seq_data$id %in% std_id,]
-  sample_data$id <- substr(sample_data$id, 1, nchar(sample_data$id) - 6)
+  
+  for (i in 1:length(sample_data$id))
+  {
+    if(grepl("ICMS", sample_data$id[i], ignore.case = TRUE)){
+      
+      sample_data$id[i] <- substr(sample_data$id[i], 1, nchar(sample_data$id[i]) - 6)
+      
+    } else if(grepl("FTMS", sample_data$id[i], ignore.case = TRUE)){
+      
+      sample_data$id[i] <- substr(sample_data$id[i], 1, nchar(sample_data$id[i]) - 8)
+      
+    } else if(grepl("NMR", sample_data$id[i], ignore.case = TRUE)){
+      
+      sample_data$id[i] <- substr(sample_data$id[i], 1, nchar(sample_data$id[i]) - 5)
+      
+    }
+  }
+  
   seq_data$id[as.numeric(rownames(sample_data))] <- sample_data$id
   
   ## the unique Sample IDs from galaxy data.

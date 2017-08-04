@@ -1,6 +1,7 @@
-########### This script extracts XIC peakAreas from TraceFinder 33 sample reports
-########### Author Marc . O. Warmoes
-########### Date: Jan 2017
+#!/usr/local/bin/Rscript
+########### This script extracts XIC peakAreas from TraceFinder 3.3 sample reports, and performs natural abundance correction as well as quantification of the peak areas into umol/g.
+########### Authors: Marc . O. Warmoes, Jonathan Sudkamp, Travis Thompson
+########### Date: July 2017
 ############################################################################################################################
 ############################################################################################################################
 library(tcltk)
@@ -16,12 +17,12 @@ library(dplyr)
 library(readxl)
 library(ggplot2)
 
-source("/PC_Xfer/Quantification Script/Helper Functions.R")
-source("/PC_Xfer/Quantification Script/User Interface.R")
-source("/PC_Xfer/Quantification Script/Compile Data For Galaxy.R")
-source("/PC_Xfer/Quantification Script/Error Checking.R")
-source("/PC_Xfer/Quantification Script/Talk to Galaxy.R")
-source("/PC_Xfer/Quantification Script/Functions After Galaxy.R")
+source("/Users/higashi/Quantification_Script/Helper Functions.R")
+source("/Users/higashi/Quantification_Script/User Interface.R")
+source("/Users/higashi/Quantification_Script/Compile Data For Galaxy.R")
+source("/Users/higashi/Quantification_Script/Error Checking.R")
+source("/Users/higashi/Quantification_Script/Talk to Galaxy.R")
+source("/Users/higashi/Quantification_Script/Functions After Galaxy.R")
 
 
 ## Tell httr not to worry about certificates.
@@ -82,13 +83,21 @@ for (i in 1:length(TF_FileList))
        {
   SampleNames[i]=strsplit(TF_FileList[i],"/")[[1]][length(strsplit(TF_FileList[i],"/")[[1]])]
   
-  if(grepl("stds|refsample", SampleNames[i], ignore.case = TRUE)){
-    
-    SampleNames[i] <- SampleNames[i] %>% gsub(".*Finder_","", .) %>% substr(.,1,nchar(.) - 20)
-    
-  } else{
+  if(grepl("ICMS", SampleNames[i], ignore.case = TRUE)){
     
     SampleNames[i] <- SampleNames[i] %>% gsub(".*Finder_","", .) %>% substr(.,1,nchar(.) - 26)
+    
+  } else if(grepl("FTMS", SampleNames[i], ignore.case = TRUE)){
+    
+    SampleNames[i] <- SampleNames[i] %>% gsub(".*Finder_","", .) %>% substr(.,1,nchar(.) - 28)
+    
+  } else if(grepl("NMR", SampleNames[i], ignore.case = TRUE)){
+    
+    SampleNames[i] <- SampleNames[i] %>% gsub(".*Finder_","", .) %>% substr(.,1,nchar(.) - 25)
+    
+  } else {
+    
+    SampleNames[i] <- SampleNames[i] %>% gsub(".*Finder_","", .) %>% substr(.,1,nchar(.) - 20)
     
   }
 }
@@ -183,18 +192,13 @@ tkdestroy(tt)
 ###########################
 ## Loop, asking for a username and password until the user quits or the request to Galaxy is successful.
 ###########################
-repeat{
   
-  ## Create pop up box to get username and password from user.
-  temp_return <- get_galaxy_login()
-  
-  username <- temp_return$username
-  password <- temp_return$password
-  
-  ## Send HTTP request to log in to Galaxy.
-  r <- galaxy_login(username, password)
-  
-}
+## Send HTTP request to log in to Galaxy.
+temp_return <- galaxy_login()
+
+r <- temp_return$r
+username <- temp_return$username
+password <- temp_return$password
 
 
 #############################

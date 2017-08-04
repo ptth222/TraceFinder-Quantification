@@ -2,59 +2,138 @@
 
 
 
+################################
+## Get the username and password for Galaxy
+################################
+
+get_galaxy_login <- function(){
+  ## Create a pop up window to get a username and password for Galaxy.
+  tt <- tktoplevel()
+  tkfocus(tt)
+  tkwm.title(tt, "Galaxy Log In")
+  tkgrid(ttklabel(tt, text = "Please enter your username and password for Galaxy." ), columnspan = 2)
+  tkgrid(ttklabel(tt, text = "This is the same as the username and password for the CESB wiki." ), columnspan = 2)
+  tkgrid(ttklabel(tt,text="    " ))
+  
+  username_label <- tklabel(tt, text="Username: ")
+  username_entry_variable <- tclVar("")
+  username_entry <- tkentry(tt, background = "white", textvariable = username_entry_variable, width = 20)
+  
+  tkgrid(username_label, username_entry)
+  tkgrid.configure(username_label, sticky = "e")
+  tkgrid.configure(username_entry, sticky = "w")
+  
+  password_label <- tklabel(tt, text="Password: ")
+  password_entry_variable <- tclVar("")
+  password_entry <- tkentry(tt, background = "white", textvariable = password_entry_variable, width = 20, show = "*")
+  
+  
+  tkgrid(password_label, password_entry)
+  tkgrid.configure(password_label, sticky = "e")
+  tkgrid.configure(password_entry, sticky = "w")
+  tkgrid(ttklabel(tt,text="    " ))
+  
+  ## Add a variable to capture whether the done button was pressed or the x.
+  test <- tclVar("")
+  tclvalue(test) <- 0
+  
+  ## Add button to close the window.
+  login_check <- function(){
+    
+    if(tclvalue(username_entry_variable) == ""){
+      tkconfigure(error_label, text = "Error. No username entered.", foreground = "red")
+    }
+    else if(tclvalue(password_entry_variable) == ""){
+      tkconfigure(error_label, text = "Error. No password entered.", foreground = "red")
+    }
+    else{
+      tclvalue(test) <- 1
+    }
+  }
+  tkgrid(tkbutton(tt, text='Submit', command = login_check), columnspan = 2)
+  error_label <- tklabel(tt)
+  tkgrid(error_label, columnspan = 2)
+  tkbind(tt, "<Return>", login_check)
+  tkbind(tt, "<Destroy>", function() tclvalue(test)<-2)
+  tkwait.variable(test)
+  testval <- as.integer(tclvalue(test))
+  tkdestroy(tt)
+  
+  if(testval == 2) {stop()}
+  
+  ## Turn tcl variables into regular ones.
+  username <- tclvalue(username_entry_variable)
+  password <- tclvalue(password_entry_variable)
+  
+  return(list(username=username, password=password))
+}
+
+
+
 ######################################
 ## Log in to Galaxy
 ######################################
 
-galaxy_login <- function(username, password){
+galaxy_login <- function(){
   
-  ## Send a GET request to Galaxy to log in and get a cookie.
-  try_result <- try(r <- GET("https://galaxy.cesb.uky.edu/", authenticate(username, password, type = "basic"), add_headers("Accept" = "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8", "Accept-Encoding" = "gzip, deflate, sdch, br", "Accept-Language" = "en-US,en;q=0.8", "Connection" = "keep-alive", "Upgrade-Insecure-Requests" = "1", "User-Agent" = "Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36")))
-  
-  ## Check for curl error after sending a request. Curl should only ever really error if there is no 
-  ## internet connection.
-  if(class(try_result) == "try-error"){
-    ## Create a variable to store the button pressed by the user. Stored as a character string of
-    ## which button was pressed.
-    response <- tkmessageBox(title = "Curl Error", 
-                             message = "Curl error when logging in to Galaxy. The server may be down. Check your internet connection and try again.", 
-                             icon = "error", type = "retrycancel")
+  repeat{
     
-    if(tclvalue(response) == "cancel"){
-      stop()
-    } else{
-      next()
+    temp_return <- get_galaxy_login()
+    
+    username <- temp_return$username
+    password <- temp_return$password
+  
+    ## Send a GET request to Galaxy to log in and get a cookie.
+    try_result <- try(r <- GET("https://galaxy.cesb.uky.edu/", authenticate(username, password, type = "basic"), add_headers("Accept" = "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8", "Accept-Encoding" = "gzip, deflate, sdch, br", "Accept-Language" = "en-US,en;q=0.8", "Connection" = "keep-alive", "Upgrade-Insecure-Requests" = "1", "User-Agent" = "Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36")))
+    
+    ## Check for curl error after sending a request. Curl should only ever really error if there is no 
+    ## internet connection.
+    if(class(try_result) == "try-error"){
+      ## Create a variable to store the button pressed by the user. Stored as a character string of
+      ## which button was pressed.
+      response <- tkmessageBox(title = "Curl Error", 
+                               message = "Curl error when logging in to Galaxy. The server may be down. Check your internet connection and try again.", 
+                               icon = "error", type = "retrycancel")
+      
+      if(tclvalue(response) == "cancel"){
+        stop()
+      } else{
+        next()
+      }
     }
+    
+    ## Check to make sure the http response is 200 OK. If not try to give the user a decent error message.
+    if(r$status_code != "200"){
+      if(r$status_code == "401"){
+        response <- tkmessageBox(title = "Login Error", 
+                                 message = "Error when logging in to Galaxy. Check your username and password and try again.", 
+                                 icon = "error", type = "retrycancel")
+        
+        if(tclvalue(response) == "cancel"){
+          stop()
+        } else{
+          next()
+        }
+        
+      } else{
+        response <- tkmessageBox(title = "Login Error", 
+                                 message = paste("Error when logging in to Galaxy. HTTP error ", r$status_code, ".", sep = ""),
+                                 icon = "error", type = "retrycancel")
+        
+        if(tclvalue(response) == "cancel"){
+          stop()
+        } else{
+          next()
+        }
+        
+      }
+    }
+    
+    ## If the request goes through successfully, break the loop and proceed with execution of the program.
+    if(r$status_code == "200"){break()}
   }
   
-  ## Check to make sure the http response is 200 OK. If not try to give the user a decent error message.
-  if(r$status_code != "200"){
-    if(r$status_code == "401"){
-      response <- tkmessageBox(title = "Login Error", 
-                               message = "Error when logging in to Galaxy. Check your username and password and try again.", 
-                               icon = "error", type = "retrycancel")
-      
-      if(tclvalue(response) == "cancel"){
-        stop()
-      } else{
-        next()
-      }
-      
-    } else{
-      response <- tkmessageBox(title = "Login Error", 
-                               message = paste("Error when logging in to Galaxy. HTTP error ", r$status_code, ".", sep = ""),
-                               icon = "error", type = "retrycancel")
-      
-      if(tclvalue(response) == "cancel"){
-        stop()
-      } else{
-        next()
-      }
-      
-    }
-  }
-
-  return(r)
+    return(list(r=r, username=username, password=password))
 }
 
 
