@@ -356,6 +356,7 @@ standards_in_TF_reports <- function(CompoundNamesAndFormulasSorted, TF_compounds
 ## TraceFinder Reports All Have the Same Type of Labeling
 ##########################
 
+## This function is currently unused. Was last used in commit a80f03e6ca844290b44964c3de0afcb3d1af3a23.
 TF_labeling_check <- function(TF_labeling_type){
 
   ## Make sure all TF files have the same labeling and set labeling to that type.

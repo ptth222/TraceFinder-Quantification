@@ -6,46 +6,18 @@ read_TF_reports <- function(TF_FileList, TempMatrix){
   ## Create a matrix to hold peak area values from each report.
   PeakAreas<-matrix(NA, nrow = dim(TempMatrix)[1]-1, ncol = length(TF_FileList ))
   
-  ## Create a list to keep track of the labeling type of each input TraceFinder file.
-  TF_labeling_type <- as.data.frame(TF_FileList, stringsAsFactors = FALSE)
-  TF_labeling_type$Labeling <- "NA"
-  
   ## Loop through all of the reports and pull out the peak areas from each report into
   ## the PeakAreas matrix.
   for (i in 1:length(TF_FileList))
   {
-    #print(TF_FileList[i]) 
     TempMatrix=read.xlsx2(TF_FileList[i], 1,startRow=45)
     TempMatrix=TempMatrix[1:(dim(TempMatrix)[1]-1),]
-    
-    ## Determine the labeling from the pattern in brackets at the end of the first compound name.
-    ## For example 13-BPG[C+0] or 13-BPG[C+0_N+0]
-    if(grepl("\\[C\\+[[:digit:]]\\]", TempMatrix$Target.Compounds[1])){
-      TF_labeling_type$Labeling[i] <- "C13"
-    } else if(grepl("\\[C\\+[[:digit:]]_N\\+[[:digit:]]\\]", TempMatrix$Target.Compounds[1])){
-      TF_labeling_type$Labeling[i] <- "C13N15"
-    } else {
-      
-      tt <- tktoplevel()
-      tkfocus(tt)
-      message_font <- tkfont.create(family = "Times New Roman", size = 14)
-      tkwm.title(tt, "Labeling Error")
-      tkgrid(ttklabel(tt, text = "Could not determine labeling from TraceFinder compound names.",
-                      font = message_font), padx = 20, pady = 20)
-      close_box <- function(){
-        tkdestroy(tt)
-      }
-      tkgrid(tkbutton(tt, text='Okay', command = close_box))
-      tkwait.window(tt)
-      
-      stop()
-    }
     
     PeakAreas[,i]= matrix(TempMatrix$Peak.Area)
     gc()
   }
   
-  return(list(PeakAreas=PeakAreas, TF_labeling_type=TF_labeling_type))
+  return(PeakAreas)
 }
 
 
