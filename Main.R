@@ -125,7 +125,13 @@ sequence_data <- gen_sequence_data(sequence_data, SampleNames)
 TF_list_in_sequence_data(sequence_data, SampleNames)
 
 ## Read in the first report's data.
-TempMatrix=read.xlsx2(TF_FileList[1], 1,startRow=45)
+TempMatrix <- report_read_check(TF_FileList[1])
+
+## Check that the report isn't empty.
+report_empty_check(TempMatrix, TF_FileList[1])
+
+## Check that the TraceFinder report has all the columns we require.
+TempMatrix <- report_column_check(TempMatrix, TF_FileList[1])
 
 ## Remove the labeling off the end of the compound names in the TraceFinder reports so that
 ## they can be compared with the names in the standard reference database.

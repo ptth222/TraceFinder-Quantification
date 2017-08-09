@@ -10,8 +10,10 @@ read_TF_reports <- function(TF_FileList, TempMatrix){
   ## the PeakAreas matrix.
   for (i in 1:length(TF_FileList))
   {
-    TempMatrix=read.xlsx2(TF_FileList[i], 1,startRow=45)
-    TempMatrix=TempMatrix[1:(dim(TempMatrix)[1]-1),]
+    TempMatrix <- report_read_check(TF_FileList[1])
+    report_empty_check(TempMatrix, TF_FileList[1])
+    TempMatrix <- TempMatrix[1:(dim(TempMatrix)[1]-1),]
+    TempMatrix <- report_column_check(TempMatrix, TF_FileList[1])
     
     PeakAreas[,i]= matrix(TempMatrix$Peak.Area)
     gc()

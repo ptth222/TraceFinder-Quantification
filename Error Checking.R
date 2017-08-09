@@ -352,6 +352,77 @@ standards_in_TF_reports <- function(CompoundNamesAndFormulasSorted, TF_compounds
 }
 
 
+###########################
+## TraceFinder reports checks
+###########################
+
+report_read_check <- function(TF_File){
+  
+  try_result <- try(TempMatrix <- read.xlsx2(TF_File, 1, startRow=45))
+  
+  ## Check to see if there were any errors when reading in.
+  if(class(try_result) == "try-error"){
+    tt <- tktoplevel()
+    message_font <- tkfont.create(family = "Times New Roman", size = 14)
+    tkwm.title(tt, "TraceFinder Report Read Error")
+    tkgrid(ttklabel(tt, text = paste("Error when reading in the TraceFinder report ", TF_File, "  .\n\n", try_result[1]),
+                    font = message_font), padx = 20, pady = 20)
+    close_box <- function(){
+      tkdestroy(tt)
+    }
+    tkgrid(tkbutton(tt, text='Okay', command = close_box))
+    tkwait.window(tt)
+    stop()
+  }
+  
+  return(TempMatrix)
+}
+
+
+report_empty_check <- function(TempMatrix, TF_File){
+  
+  ## Check to see if there is data in the file.
+  if(nrow(TempMatrix) == 0){
+    tt <- tktoplevel()
+    message_font <- tkfont.create(family = "Times New Roman", size = 14)
+    tkwm.title(tt, "TraceFinder Report Error")
+    tkgrid(ttklabel(tt, text = paste("The TraceFinder report ", TF_File, " is empty. \nPlease supply a non-empty report."),
+                    font = message_font), padx = 20, pady = 20)
+    close_box <- function(){
+      tkdestroy(tt)
+    }
+    tkgrid(tkbutton(tt, text='Okay', command = close_box))
+    tkwait.window(tt)
+    stop()
+  }
+  
+}
+
+
+report_column_check <- function(TempMatrix, TF_File){
+  ## Make sure it has the correct columns. If it doesn't have all of the columns then give the user a message box and quit the program.
+  if(!all(c("Target.Compounds", "Formula", "Peak.Area") %in% colnames(TempMatrix))){
+    
+    ## Create a message box.
+    tt <- tktoplevel()
+    message_font <- tkfont.create(family = "Times New Roman", size = 14)
+    tkwm.title(tt, "TraceFinder Report Error")
+    tkgrid(ttklabel(tt, text = paste("The TraceFinder report ", TF_File, " did not have the correct column names, or the column names are not on row 45. \nThere should be column names for \"Target Compounds\", \"Formula\" and \"Peak Area\". \nThese names are case sensitive."),
+                    font = message_font), padx = 20, pady = 20)
+    close_box <- function(){
+      tkdestroy(tt)
+    }
+    tkgrid(tkbutton(tt, text='Okay', command = close_box))
+    tkwait.window(tt)
+    stop()
+  }
+  
+  TempMatrix <- TempMatrix[!is.na(TempMatrix$Target.Compound),]
+  
+  return(TempMatrix)
+}
+
+
 ##########################
 ## TraceFinder Reports All Have the Same Type of Labeling
 ##########################

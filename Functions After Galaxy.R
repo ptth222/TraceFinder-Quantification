@@ -114,7 +114,7 @@ gen_uM_ratio_column <- function(galaxy_data, std_compound_refdb, stdmix_id, samp
     ## Get the galaxy data for the standard compound ID
     compound_data <- galaxy_data[galaxy_data$Compound == id,]
     ## change the quantified_nM_ratio column for the compound data indeces to = the Renormalized intensities / std mix average intensity for the compoound
-    ## and multiplhy it by the std mix concentration (nM) for that compound.
+    ## and multiply it by the std mix concentration (nM) for that compound.
     galaxy_data[rownames(compound_data),"Quantified_uM_ratio"] <- compound_data$Renormalized / stdmix_compound_avgs_data[id,"avg_intensity"] *
       stdmix_compound_avgs_data[id,"concentration_uM"]
   }
