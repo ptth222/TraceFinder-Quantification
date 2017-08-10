@@ -6,6 +6,10 @@ read_TF_reports <- function(TF_FileList, TempMatrix){
   ## Create a matrix to hold peak area values from each report.
   PeakAreas<-matrix(NA, nrow = dim(TempMatrix)[1]-1, ncol = length(TF_FileList ))
   
+  ## Create a list to keep track of the labeling type of each input TraceFinder file.
+  TF_labeling_type <- as.data.frame(TF_FileList, stringsAsFactors = FALSE)
+  TF_labeling_type$Labeling <- "NA"
+  
   ## Loop through all of the reports and pull out the peak areas from each report into
   ## the PeakAreas matrix.
   for (i in 1:length(TF_FileList))
@@ -15,11 +19,34 @@ read_TF_reports <- function(TF_FileList, TempMatrix){
     TempMatrix <- TempMatrix[1:(dim(TempMatrix)[1]-1),]
     TempMatrix <- report_column_check(TempMatrix, TF_FileList[1])
     
+    ## Determine the labeling from the pattern in brackets at the end of the first compound name.
+    ## For example 13-BPG[C+0] or 13-BPG[C+0_N+0]
+    if(any(grepl("\\[C\\+[[:digit:]]_N\\+[[:digit:]]\\]", TempMatrix$Target.Compounds))){
+      TF_labeling_type$Labeling[i] <- "C13N15"
+    } else if(any(grepl("\\[C\\+[[:digit:]]\\]", TempMatrix$Target.Compounds))){
+      TF_labeling_type$Labeling[i] <- "C13"
+    } else {
+      
+      tt <- tktoplevel()
+      tkfocus(tt)
+      message_font <- tkfont.create(family = "Times New Roman", size = 14)
+      tkwm.title(tt, "Labeling Error")
+      tkgrid(ttklabel(tt, text = "Could not determine labeling from TraceFinder compound names.",
+                      font = message_font), padx = 20, pady = 20)
+      close_box <- function(){
+        tkdestroy(tt)
+      }
+      tkgrid(tkbutton(tt, text='Okay', command = close_box))
+      tkwait.window(tt)
+      
+      stop()
+    }
+    
     PeakAreas[,i]= matrix(TempMatrix$Peak.Area)
     gc()
   }
   
-  return(PeakAreas)
+  return(list(PeakAreas=PeakAreas, TF_labeling_type=TF_labeling_type))
 }
 
 
@@ -181,23 +208,26 @@ build_final_matrix <- function(Labelling, CompoundNamesAndFormulasForStripping, 
       # if (PeakAreas[j,i]>0)
       #  {
       ## Strip off the labeling from the row name and put it in the temporary matrix.
-      TempForStripping[,1]=strsplit(CompoundNamesAndFormulasForStripping[j,1],"\\[")[[1]][1]
+      TempForStripping[,1] <- strsplit(CompoundNamesAndFormulasForStripping[j,1],"\\[")[[1]][1]
       ## Put the chemical formula in the temporary matrix.
-      TempForStripping[,2]=CompoundNamesAndFormulasForStripping[j,2]
+      TempForStripping[,2] <- CompoundNamesAndFormulasForStripping[j,2]
       ## Get just the labeling from the row name and put it in a temporary variable.
       ## ex. [C+0] becomes C+0 in the variable.
-      TempIsotoplogue=strsplit(strsplit(CompoundNamesAndFormulasForStripping[j,1],"\\[")[[1]][2],"\\]")[[1]]
+      TempIsotoplogue <- regmatches(CompoundNamesAndFormulasForStripping[j,1], regexpr("\\[.+\\]", CompoundNamesAndFormulasForStripping[j,1]))
+      TempIsotoplogue <- gsub("\\[|\\]", "", TempIsotoplogue)
+
       ## If there is no labeling at all on the row name then set the variable to 
       ## C+0 or C+0_N+0 depending on which labelling has been done.
-      if (is.na(TempIsotoplogue))
+      if (identical(TempIsotoplogue, character(0)))
       {
-        if (Labelling=="C13")
-        {
-          TempIsotoplogue="C+0"
-        }
-        if (Labelling=="C13N15")
-        {
-          TempIsotoplogue="C+0_N+0"
+        if (Labelling=="C13"){
+          
+          TempIsotoplogue <- "C+0"
+          
+        } else if(Labelling == "C13N15"){
+          
+          TempIsotoplogue <- "C+0_N+0"
+          
         }
       }
       

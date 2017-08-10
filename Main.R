@@ -33,7 +33,7 @@ httr::set_config( config( ssl_verifypeer = 0L ) )
 ## Create Opening GUI for the User
 ###########################
 
-Labelling <- user_interface()
+user_interface()
 
 
 
@@ -147,7 +147,15 @@ standards_in_TF_reports(CompoundNamesAndFormulasSorted, TF_compounds)
 ##################################
 
 ## Read in TF reports and put the peak areas into a matrix.
-PeakAreas <- read_TF_reports(TF_FileList, TempMatrix)
+temp_return <- read_TF_reports(TF_FileList, TempMatrix)
+PeakAreas <- temp_return$PeakAreas
+TF_labeling_type <- temp_return$TF_labeling_type
+
+## Check that all the TraceFinder reports have the same labeling.
+TF_labeling_check(TF_labeling_type)
+
+## If the program made it past the error check then all the TF files have the same labeling, so set the Labelling to it.
+Labelling <- TF_labeling_type$Labeling[1]
 
 
 ## Give the user a message so they know the program is working.

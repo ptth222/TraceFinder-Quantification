@@ -10,17 +10,6 @@ user_interface <- function(){
   tkgrid(ttklabel(tt, text = "Upload Files Here" ), columnspan = 4)
   tkgrid(ttklabel(tt,text="    " ))
   
-  ###
-  ## Add dropdown for labelling type.
-  ###
-  tkgrid(tklabel(tt, text = "Type of Labelling: "), columnspan = 4)
-  labeling_types <- c("Choose One", "C13", "C13N15")
-  chosen_labeling <- tclVar("Choose One")
-  dropdown <- ttkcombobox(tt, values = labeling_types, textvariable = chosen_labeling, state="readonly") 
-  tkgrid(dropdown, columnspan = 4)
-  tkgrid(ttklabel(tt,text="    " ))
-  
-  
   ####
   ## Add in the widgets to get the Tracefinder sample reports.
   ## Create a label, entry box to display the chosen filepath, and button to select files.
@@ -94,9 +83,6 @@ user_interface <- function(){
       
       tkconfigure(error_label, text ="Error. Files not selected for every field.", foreground = "red")
     }
-    else if(tclvalue(chosen_labeling) == "Choose One"){
-      tkconfigure(error_label, text ="Error. Please choose a type of labeling.", foreground = "red")
-    }
     else{
       tclvalue(test) <- 1
     }
@@ -110,7 +96,5 @@ user_interface <- function(){
   tkdestroy(tt)
   
   if(testval == 2) {stop()}
-  
-  return(tclvalue(chosen_labeling))
 
 }

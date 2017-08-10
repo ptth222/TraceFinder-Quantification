@@ -427,7 +427,7 @@ report_column_check <- function(TempMatrix, TF_File){
 ## TraceFinder Reports All Have the Same Type of Labeling
 ##########################
 
-## This function is currently unused. Was last used in commit a80f03e6ca844290b44964c3de0afcb3d1af3a23.
+
 TF_labeling_check <- function(TF_labeling_type){
 
   ## Make sure all TF files have the same labeling and set labeling to that type.
@@ -437,7 +437,7 @@ TF_labeling_check <- function(TF_labeling_type){
     tkfocus(tt)
     message_font <- tkfont.create(family = "Times New Roman", size = 14)
     tkwm.title(tt, "Labeling Error")
-    tkgrid(ttklabel(tt, text = "Not all TraceFinder files have the same labeling.\nPlease submit TraceFinder files with the same type of labeling.",
+    tkgrid(ttklabel(tt, text = "Not all TraceFinder files have the same type of labeling.\nPlease submit TraceFinder files with the same type of labeling.",
                     font = message_font), padx = 20, pady = 20)
     close_box <- function(){
       tkdestroy(tt)
