@@ -14,10 +14,10 @@ read_TF_reports <- function(TF_FileList, TempMatrix){
   ## the PeakAreas matrix.
   for (i in 1:length(TF_FileList))
   {
-    TempMatrix <- report_read_check(TF_FileList[1])
-    report_empty_check(TempMatrix, TF_FileList[1])
+    TempMatrix <- report_read_check(TF_FileList[i])
+    report_empty_check(TempMatrix, TF_FileList[i])
     TempMatrix <- TempMatrix[1:(dim(TempMatrix)[1]-1),]
-    TempMatrix <- report_column_check(TempMatrix, TF_FileList[1])
+    TempMatrix <- report_column_check(TempMatrix, TF_FileList[i])
     
     ## Determine the labeling from the pattern in brackets at the end of the first compound name.
     ## For example 13-BPG[C+0] or 13-BPG[C+0_N+0]
@@ -261,7 +261,7 @@ build_final_matrix <- function(Labelling, CompoundNamesAndFormulasForStripping, 
         {
           TempForStripping[,4]=0
         }
-        "["
+
         TempForStripping[,5]=SampleNames[i]
         TempForStripping[,6]=PeakAreas[j,i]
         ## Not filtering out peak values of 0 anymore so no data is lost.
