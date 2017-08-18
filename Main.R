@@ -45,15 +45,17 @@ user_interface()
 
 
 ## Standards Checks
-CompoundNamesAndFormulasSorted88 <- standards_read_check(metadata_file_path)
-standards_empty_check(CompoundNamesAndFormulasSorted88)
-CompoundNamesAndFormulasSorted <- standards_column_check(CompoundNamesAndFormulasSorted88)
+CompoundNamesAndFormulasSorted <- standards_read_check(metadata_file_path)
+standards_empty_check(CompoundNamesAndFormulasSorted)
+CompoundNamesAndFormulasSorted <- standards_column_check(CompoundNamesAndFormulasSorted)
+standards_values_check(CompoundNamesAndFormulasSorted)
 
 
 ## MetaData Checks
 meta_data <- metadata_read_check(metadata_file_path)
 metadata_empty_check(meta_data)
 meta_data <- metadata_column_check(meta_data)
+metadata_values_check(meta_data)
 
 
 ## Sequence Data Checks

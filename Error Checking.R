@@ -6,7 +6,7 @@
 
 standards_read_check <- function(metadata_file_path){
 
-  try_result <- try(CompoundNamesAndFormulasSorted88 <- read.xlsx_or_csv(metadata_file_path, header = TRUE, stringsAsFactors = FALSE, skip = 20, sheet = "ICMS_StdComp_RefDB_Submission"))
+  try_result <- try(CompoundNamesAndFormulasSorted <- read.xlsx_or_csv(metadata_file_path, header = TRUE, stringsAsFactors = FALSE, skip = 20, sheet = "ICMS_StdComp_RefDB_Submission"))
   
   ## Check to see if there were any errors when reading in.
   if(class(try_result) == "try-error"){
@@ -23,14 +23,14 @@ standards_read_check <- function(metadata_file_path){
     stop()
   }
 
-  return(CompoundNamesAndFormulasSorted88)
+  return(CompoundNamesAndFormulasSorted)
 }
 
 
-standards_empty_check <- function(CompoundNamesAndFormulasSorted88){
+standards_empty_check <- function(CompoundNamesAndFormulasSorted){
   
   ## Check to see if there is data in the file.
-  if(nrow(CompoundNamesAndFormulasSorted88) == 0){
+  if(nrow(CompoundNamesAndFormulasSorted) == 0){
     tt <- tktoplevel()
     message_font <- tkfont.create(family = "Times New Roman", size = 14)
     tkwm.title(tt, "Standards Mixture Error")
@@ -47,9 +47,9 @@ standards_empty_check <- function(CompoundNamesAndFormulasSorted88){
 }
 
 
-standards_column_check <- function(CompoundNamesAndFormulasSorted88){
+standards_column_check <- function(CompoundNamesAndFormulasSorted){
   ## Make sure it has the correct columns. If it doesn't have all of the columns then give the user a message box and quit the program.
-  if(!all(c("CompoundName", "Concentration_uM") %in% colnames(CompoundNamesAndFormulasSorted88))){
+  if(!all(c("CompoundName", "Concentration_uM") %in% colnames(CompoundNamesAndFormulasSorted))){
     
     ## Create a message box.
     tt <- tktoplevel()
@@ -65,16 +65,32 @@ standards_column_check <- function(CompoundNamesAndFormulasSorted88){
     stop()
   }
   
-  ## Replace empty compound names, and concentrations.
-  CompoundNamesAndFormulasSorted88$CompoundName[CompoundNamesAndFormulasSorted88$CompoundName == ""] <- "BLANK"
-  CompoundNamesAndFormulasSorted88$Concentration_uM[CompoundNamesAndFormulasSorted88$Concentration_uM == ""] <- 0
-  
-  CompoundNamesAndFormulasSorted=CompoundNamesAndFormulasSorted88
-  
   CompoundNamesAndFormulasSorted <- CompoundNamesAndFormulasSorted[!is.na(CompoundNamesAndFormulasSorted$CompoundName),]
   CompoundNamesAndFormulasSorted <- CompoundNamesAndFormulasSorted[,c("CompoundName", "Concentration_uM")]
   
   return(CompoundNamesAndFormulasSorted)
+}
+
+
+## Check to make sure that every CompoundName has data in every column. This function assumes that there are no NA values for the 
+## CompoundName column since they are removed with an earlier function. It also assumes that the data only has the columns we need
+## since an earlier function also strips off any extra columns.
+standards_values_check <- function(CompoundNamesAndFormulasSorted){
+  if(any(is.na(CompoundNamesAndFormulasSorted))){
+    
+    ## Create a message box.
+    tt <- tktoplevel()
+    message_font <- tkfont.create(family = "Times New Roman", size = 14)
+    tkwm.title(tt, "Standards Error")
+    tkgrid(ttklabel(tt, text = "The \"ICMS_StdComp_RefDB_Submission\" sheet in the meta data file does not have data for every CompoundName. \nMake sure every column has values for every CompoundName.",
+                    font = message_font), padx = 20, pady = 20)
+    close_box <- function(){
+      tkdestroy(tt)
+    }
+    tkgrid(tkbutton(tt, text='Okay', command = close_box))
+    tkwait.window(tt)
+    stop()
+  }
 }
 
 
@@ -155,7 +171,26 @@ metadata_column_check <- function(meta_data){
   return(meta_data)
 }
 
-
+## Check to make sure that every SampleID has data in every column. This function assumes that there are no NA values for the 
+## SampleID column since they are removed with an earlier function. It also assumes that the data only has the columns we need
+## since an earlier function also strips off any extra columns.
+metadata_values_check <- function(meta_data){
+  if(any(is.na(meta_data))){
+    
+    ## Create a message box.
+    tt <- tktoplevel()
+    message_font <- tkfont.create(family = "Times New Roman", size = 14)
+    tkwm.title(tt, "Meta-Data Error")
+    tkgrid(ttklabel(tt, text = "The \"ICMS_MetaData_Submission\" sheet in the meta data file does not have data for every SampleID. \nMake sure every column has values for every SampleID.",
+                    font = message_font), padx = 20, pady = 20)
+    close_box <- function(){
+      tkdestroy(tt)
+    }
+    tkgrid(tkbutton(tt, text='Okay', command = close_box))
+    tkwait.window(tt)
+    stop()
+  }
+}
 
 
 #########################

@@ -220,12 +220,19 @@ gen_uM_sequence_ratio_column <- function(galaxy_data, std_compound_refdb, sequen
       tmp_data <- galaxy_data
       ## Filter to only data for our std mixes and between samples
       tmp_data <- tmp_data[tmp_data$SamplID %in% c(sample_id$id, stds),]
-      ## Filter down to only C_isommer = 0 data or C_isomer = 0 and N_isomer = 0
-      if(Labelling =="C13"){
-        tmp_data <- tmp_data[tmp_data$C_isomers == 0,]
-      } else if(Labelling == "C13N15"){
-        tmp_data <- tmp_data[tmp_data$C_isomers == 0 & tmp_data$N_isomers == 0,]
-      }
+      
+      
+      # ## Filter down to only C_isommer = 0 data or C_isomer = 0 and N_isomer = 0
+      # if(Labelling =="C13"){
+      #   
+      #   tmp_data <- tmp_data[tmp_data$C_isomers == 0,]
+      #   
+      # } else if(Labelling == "C13N15"){
+      #   
+      #   tmp_data <- tmp_data[tmp_data$C_isomers == 0 & tmp_data$N_isomers == 0,]
+      # }
+      # 
+      
       ## get the unique Compounds for the between samples 
       std_compounds <- unique(tmp_data$Compound[tmp_data$SamplID %in% sample_id$id])
       ## Filter down to only the verified standard compounds to look for in data.
@@ -234,6 +241,47 @@ gen_uM_sequence_ratio_column <- function(galaxy_data, std_compound_refdb, sequen
       for (comp_id in std_compounds){
         ## get only the data for the standard compound
         data <- tmp_data[tmp_data$Compound %in% comp_id,]
+        
+        ## Filter down to only C_isommer = 0 data or C_isomer = 0 and N_isomer = 0
+        if(Labelling =="C13"){
+          
+          if(comp_id == "Lactate"){
+            
+            data <- data[data$C_isomers == 3,]
+          } else{
+            
+            data <- data[data$C_isomers == 0,]
+          }
+          
+          
+        } else if(Labelling == "C13N15"){
+          
+          if(comp_id == "Lactate"){
+            
+            data <- data[data$C_isomers == 3 & data$N_isomers == 0,]
+          } else{
+            
+            data <- data[data$C_isomers == 0 & data$N_isomers == 0,]
+          }
+        }
+        
+        if(nrow(data) == 0){
+          
+          tt <- tktoplevel()
+          tkfocus(tt)
+          message_font <- tkfont.create(family = "Times New Roman", size = 12)
+          tkwm.title(tt, "Sequence Quantification Warning")
+          tkgrid(ttklabel(tt, text = paste0("The compound \n\n", comp_id, "\n\ndid not have an entry in the TraceFinder reports for its unlabeled isotopologue (C+0, C+0_N+0). \nIt could not be quantified."), 
+                          font = message_font), padx = 20, pady = 20)
+          close_box <- function(){
+            tkdestroy(tt)
+          }
+          tkgrid(tkbutton(tt, text='Okay', command = close_box))
+          tkwait.window(tt)
+          
+          next()
+        }
+        
         ## Subtract the Renormalized intensity for first standard mix from second standard mix intensity for the standard compound
         std_compound_change <- data$Renormalized[data$SamplID == std_2$id] - data$Renormalized[data$SamplID == std_1$id]
         ## Take the standard mix difference and divide it by the amount of samples between standard mix, and add to first standard mix intensity
