@@ -7,6 +7,15 @@
 ## Function Definitions
 ###########################
 
+Set_Renormalized_for_Unlabeled_Compounds <- function(galaxy_data, Labelling){
+  
+  galaxy_data$Renormalized[!grepl("C[[:digit:]]", galaxy_data$Mol_Formula) & !(Labelling == "13C15N" & grepl("N[[:digit:]]", galaxy_data$Mol_Formula))] <- 
+    galaxy_data$Intensity[!grepl("C[[:digit:]]", galaxy_data$Mol_Formula) & !(Labelling == "13C15N" & grepl("N[[:digit:]]", galaxy_data$Mol_Formula))]
+  
+  return(galaxy_data)
+
+}
+
 ## Not being used currently, but this function will allow for the Renormalized Intensities to be corrected
 ## by the internal standard "DSS."  This function generates the Internal Standards corrected intensity column
 ## for potential use in quantitation.  It requires the galaxy data and internal standard ID.

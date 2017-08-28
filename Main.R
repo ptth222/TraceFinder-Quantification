@@ -314,6 +314,8 @@ write(content(r, "text"), file = "NA_corrected_file_from_Galaxy.txt")
 
 galaxy_data <- read.delim("NA_corrected_file_from_Galaxy.txt", header = TRUE, sep = "\t", stringsAsFactors = FALSE)
 
+galaxy_data <- Set_Renormalized_for_Unlabeled_Compounds(galaxy_data, Labelling)
+
 plot_samples <- data.frame(Signal = galaxy_data$Renormalized[galaxy_data$Compound == "DSS" & galaxy_data$C_isomers == 0], 
                            SampleID = galaxy_data$SamplID[galaxy_data$Compound == "DSS" & galaxy_data$C_isomers == 0], stringsAsFactors = FALSE)
 
