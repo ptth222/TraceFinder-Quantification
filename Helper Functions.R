@@ -27,15 +27,15 @@ gen_sequence_data <- function(sequence_data, tf_sample_id){
   
   for (i in 1:length(sample_data$id))
   {
-    if(grepl("ICMS", sample_data$id[i], ignore.case = TRUE)){
+    if(grepl("ICMS[[:alpha:]]|GCMS[[:alpha:]]", sample_data$id[i], ignore.case = TRUE)){
       
       sample_data$id[i] <- substr(sample_data$id[i], 1, nchar(sample_data$id[i]) - 6)
       
-    } else if(grepl("FTMS", sample_data$id[i], ignore.case = TRUE)){
+    } else if(grepl("FTMS[[:alpha:]]", sample_data$id[i], ignore.case = TRUE)){
       
       sample_data$id[i] <- substr(sample_data$id[i], 1, nchar(sample_data$id[i]) - 8)
       
-    } else if(grepl("NMR", sample_data$id[i], ignore.case = TRUE)){
+    } else if(grepl("NMR[[:alpha:]]", sample_data$id[i], ignore.case = TRUE)){
       
       sample_data$id[i] <- substr(sample_data$id[i], 1, nchar(sample_data$id[i]) - 5)
       
