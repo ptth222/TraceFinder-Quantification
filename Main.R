@@ -85,15 +85,15 @@ for (i in 1:length(TF_FileList))
        {
   SampleNames[i]=strsplit(TF_FileList[i],"/")[[1]][length(strsplit(TF_FileList[i],"/")[[1]])]
   
-  if(grepl("ICMS", SampleNames[i], ignore.case = TRUE)){
+  if(grepl("ICMS[[:alpha:]]|GCMS[[:alpha:]]", SampleNames[i], ignore.case = TRUE)){
     
     SampleNames[i] <- SampleNames[i] %>% gsub(".*Finder_","", .) %>% substr(.,1,nchar(.) - 26)
     
-  } else if(grepl("FTMS", SampleNames[i], ignore.case = TRUE)){
+  } else if(grepl("FTMS[[:alpha:]]", SampleNames[i], ignore.case = TRUE)){
     
     SampleNames[i] <- SampleNames[i] %>% gsub(".*Finder_","", .) %>% substr(.,1,nchar(.) - 28)
     
-  } else if(grepl("NMR", SampleNames[i], ignore.case = TRUE)){
+  } else if(grepl("NMR[[:alpha:]]", SampleNames[i], ignore.case = TRUE)){
     
     SampleNames[i] <- SampleNames[i] %>% gsub(".*Finder_","", .) %>% substr(.,1,nchar(.) - 25)
     
@@ -313,6 +313,9 @@ setwd(PathWithTFfiles)
 write(content(r, "text"), file = "NA_corrected_file_from_Galaxy.txt")
 
 galaxy_data <- read.delim("NA_corrected_file_from_Galaxy.txt", header = TRUE, sep = "\t", stringsAsFactors = FALSE)
+
+## Change NA values in the Renormalized column to 0's to avoid errors.
+galaxy_data$Renormalized[is.na(galaxy_data$Renormalized)] <- 0
 
 galaxy_data <- Set_Renormalized_for_Unlabeled_Compounds(galaxy_data, Labelling)
 

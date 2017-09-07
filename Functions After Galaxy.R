@@ -7,14 +7,17 @@
 ## Function Definitions
 ###########################
 
+## This function sets the Renormalized column to the intensity column for compounds that don't contain both carbon and nitrogen, or carbon
+## depending on the labeling.
 Set_Renormalized_for_Unlabeled_Compounds <- function(galaxy_data, Labelling){
   
   galaxy_data$Renormalized[!grepl("C[[:digit:]]", galaxy_data$Mol_Formula) & !(Labelling == "13C15N" & grepl("N[[:digit:]]", galaxy_data$Mol_Formula))] <- 
-    galaxy_data$Intensity[!grepl("C[[:digit:]]", galaxy_data$Mol_Formula) & !(Labelling == "13C15N" & grepl("N[[:digit:]]", galaxy_data$Mol_Formula))]
+    as.numeric(galaxy_data$Intensity[!grepl("C[[:digit:]]", galaxy_data$Mol_Formula) & !(Labelling == "13C15N" & grepl("N[[:digit:]]", galaxy_data$Mol_Formula))])
   
   return(galaxy_data)
 
 }
+
 
 ## Not being used currently, but this function will allow for the Renormalized Intensities to be corrected
 ## by the internal standard "DSS."  This function generates the Internal Standards corrected intensity column
@@ -38,6 +41,10 @@ gen_is_correction_column <- function(galaxy_data, is_id = "DSS"){
   ## Return the new dataset with the added column.
   return(galaxy_data)
 }
+
+
+
+
 ## This function swaps the intensity values for the Lactate compound C_isomer = 0 and the Lactate compound C_isomer = 3.
 ## It also takes into consideration the type of labelling to control for N_isomer = 0.  This data is then used to do quantification.
 swap_compound_cisomer0_intensity <- function(galaxy_data, swap_compound = "Lactate", Labelling = Labelling, swap_cisomer = 3){
@@ -66,6 +73,9 @@ swap_compound_cisomer0_intensity <- function(galaxy_data, swap_compound = "Lacta
   ## Return the quantification data for gen_nm_ratio_column function to use.
   return(quantification_data)
 }
+
+
+
 ## This function generates the matrix so that the standard mixes average intensity per compound can be calculated.
 ## It requires: galaxy data, stdmix_ids, the std compound names, what type of labelling, and the swap compound boolean.
 ## It also utilizes the swap_compound_cisomer0_intensity function above, and returns the matrix with all of the standard mixes 
@@ -89,7 +99,7 @@ gen_stdmix_intensity_matrix <- function(galaxy_data, stdmix_id, stdcompound_name
       compound_id <- quantification_data$Compound
       ## Populate the matrix with the Renormalized intensity for the C-isomer = 0 quantification data
       ## for the compounds present in the std mix and the column associated with the std mix ID.
-      matrix[compound_id, id] <- quantification_data$Renormalized
+      matrix[compound_id, id] <- as.numeric(quantification_data$Renormalized)
     } else{
       ## Just does the same thing but swaps the C-isomer = 0 with C-isomer = 0 if FALSE, which will return 
       ## necessary quantification data for matrix.
