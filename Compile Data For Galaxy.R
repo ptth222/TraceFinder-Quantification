@@ -31,12 +31,13 @@ read_TF_reports <- function(TF_FileList, TempMatrix){
       tkfocus(tt)
       message_font <- tkfont.create(family = "Times New Roman", size = 14)
       tkwm.title(tt, "Labeling Error")
-      tkgrid(ttklabel(tt, text = "Could not determine labeling from TraceFinder compound names.",
+      tkgrid(ttklabel(tt, image = error_icon),
+             ttklabel(tt, text = "Could not determine labeling from TraceFinder compound names.",
                       font = message_font), padx = 20, pady = 20)
       close_box <- function(){
         tkdestroy(tt)
       }
-      tkgrid(tkbutton(tt, text='Okay', command = close_box))
+      tkgrid(tkbutton(tt, text='Okay', command = close_box), columnspan = 2)
       tkwait.window(tt)
       
       stop()

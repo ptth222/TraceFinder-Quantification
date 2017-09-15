@@ -25,6 +25,13 @@ source("/Users/higashi/Quantification_Script/Talk to Galaxy.R")
 source("/Users/higashi/Quantification_Script/Functions After Galaxy.R")
 
 
+## Create image files for warning and error messages.
+error_icon <- tclVar()
+tkimage.create("photo", error_icon, file = "/Users/higashi/Quantification_Script/Images/error-icon.png")
+warning_icon <- tclVar()
+tkimage.create("photo", warning_icon, file = "/Users/higashi/Quantification_Script/Images/warning-icon.png")
+
+
 ## Tell httr not to worry about certificates.
 httr::set_config( config( ssl_verifypeer = 0L ) )
 

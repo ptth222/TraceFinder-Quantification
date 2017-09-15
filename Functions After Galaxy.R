@@ -174,12 +174,13 @@ gen_uM_sequence_ratio_column <- function(galaxy_data, std_compound_refdb, sequen
           tkfocus(tt)
           message_font <- tkfont.create(family = "Times New Roman", size = 12)
           tkwm.title(tt, "Sequence Quantification Warning")
-          tkgrid(ttklabel(tt, text = paste("The TraceFinder file for standard mix ", std_1$id, " was not found.\nSamples:\n\n", paste(sample_id$id, collapse = "\n"), "\n\ncould not be quantified.", sep = ""), 
+          tkgrid(ttklabel(tt, image = warning_icon),
+                 ttklabel(tt, text = paste("The TraceFinder file for standard mix ", std_1$id, " was not found.\nSamples:\n\n", paste(sample_id$id, collapse = "\n"), "\n\ncould not be quantified.", sep = ""), 
                           font = message_font), padx = 20, pady = 20)
           close_box <- function(){
             tkdestroy(tt)
           }
-          tkgrid(tkbutton(tt, text='Okay', command = close_box))
+          tkgrid(tkbutton(tt, text='Okay', command = close_box), columnspan = 2)
           tkwait.window(tt)
         }
         
@@ -198,12 +199,13 @@ gen_uM_sequence_ratio_column <- function(galaxy_data, std_compound_refdb, sequen
           tkfocus(tt)
           message_font <- tkfont.create(family = "Times New Roman", size = 12)
           tkwm.title(tt, "Sequence Quantification Warning")
-          tkgrid(ttklabel(tt, text = paste("The TraceFinder file for standard mix ", std_2$id, " was not found.\nSamples:\n\n", paste(sample_id$id, collapse = "\n"), "\n\ncould not be quantified.", sep = ""), 
+          tkgrid(ttklabel(tt, image = warning_icon),
+                 ttklabel(tt, text = paste("The TraceFinder file for standard mix ", std_2$id, " was not found.\nSamples:\n\n", paste(sample_id$id, collapse = "\n"), "\n\ncould not be quantified.", sep = ""), 
                           font = message_font), padx = 20, pady = 20)
           close_box <- function(){
             tkdestroy(tt)
           }
-          tkgrid(tkbutton(tt, text='Okay', command = close_box))
+          tkgrid(tkbutton(tt, text='Okay', command = close_box), columnspan = 2)
           tkwait.window(tt)
         }
         
@@ -222,12 +224,13 @@ gen_uM_sequence_ratio_column <- function(galaxy_data, std_compound_refdb, sequen
         tkfocus(tt)
         message_font <- tkfont.create(family = "Times New Roman", size = 12)
         tkwm.title(tt, "Sequence Quantification Warning")
-        tkgrid(ttklabel(tt, text = paste("The TraceFinder files for samples:\n\n", paste(non_exist, collapse = "\n"), "\n\nwere not found.\nThey could not be quantified.", sep = ""), 
+        tkgrid(ttklabel(tt, image = warning_icon),
+               ttklabel(tt, text = paste("The TraceFinder files for samples:\n\n", paste(non_exist, collapse = "\n"), "\n\nwere not found.\nThey could not be quantified.", sep = ""), 
                         font = message_font), padx = 20, pady = 20)
         close_box <- function(){
           tkdestroy(tt)
         }
-        tkgrid(tkbutton(tt, text='Okay', command = close_box))
+        tkgrid(tkbutton(tt, text='Okay', command = close_box), columnspan = 2)
         tkwait.window(tt)
         
       }
@@ -290,12 +293,13 @@ gen_uM_sequence_ratio_column <- function(galaxy_data, std_compound_refdb, sequen
           tkfocus(tt)
           message_font <- tkfont.create(family = "Times New Roman", size = 12)
           tkwm.title(tt, "Sequence Quantification Warning")
-          tkgrid(ttklabel(tt, text = paste0("The compound \n\n", comp_id, "\n\ndid not have an entry in the TraceFinder reports for its unlabeled isotopologue (C+0, C+0_N+0). \nIt could not be quantified."), 
+          tkgrid(ttklabel(tt, image = warning_icon),
+                 ttklabel(tt, text = paste0("The compound \n\n", comp_id, "\n\ndid not have an entry in the TraceFinder reports for its unlabeled isotopologue (C+0, C+0_N+0). \nIt could not be quantified."), 
                           font = message_font), padx = 20, pady = 20)
           close_box <- function(){
             tkdestroy(tt)
           }
-          tkgrid(tkbutton(tt, text='Okay', command = close_box))
+          tkgrid(tkbutton(tt, text='Okay', command = close_box), columnspan = 2)
           tkwait.window(tt)
           
           next()

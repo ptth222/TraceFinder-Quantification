@@ -13,12 +13,13 @@ standards_read_check <- function(metadata_file_path){
     tt <- tktoplevel()
     message_font <- tkfont.create(family = "Times New Roman", size = 14)
     tkwm.title(tt, "Standards Mixture Read Error")
-    tkgrid(ttklabel(tt, text = paste("Error when reading in the \"ICMS_StdComp_RefDB_Submission\" sheet in the meta data file:\n\n", try_result[1]),
+    tkgrid(ttklabel(tt, image = error_icon),
+           ttklabel(tt, text = paste("Error when reading in the \"ICMS_StdComp_RefDB_Submission\" sheet in the meta data file:\n\n", try_result[1]),
                     font = message_font), padx = 20, pady = 20)
     close_box <- function(){
       tkdestroy(tt)
     }
-    tkgrid(tkbutton(tt, text='Okay', command = close_box))
+    tkgrid(tkbutton(tt, text='Okay', command = close_box), columnspan = 2)
     tkwait.window(tt)
     stop()
   }
@@ -34,12 +35,13 @@ standards_empty_check <- function(CompoundNamesAndFormulasSorted){
     tt <- tktoplevel()
     message_font <- tkfont.create(family = "Times New Roman", size = 14)
     tkwm.title(tt, "Standards Mixture Error")
-    tkgrid(ttklabel(tt, text = "The \"ICMS_StdComp_RefDB_Submission\" sheet in the meta data file is empty. \nPlease supply a non-empty sheet.",
+    tkgrid(ttklabel(tt, image = error_icon),
+           ttklabel(tt, text = "The \"ICMS_StdComp_RefDB_Submission\" sheet in the meta data file is empty. \nPlease supply a non-empty sheet.",
                     font = message_font), padx = 20, pady = 20)
     close_box <- function(){
       tkdestroy(tt)
     }
-    tkgrid(tkbutton(tt, text='Okay', command = close_box))
+    tkgrid(tkbutton(tt, text='Okay', command = close_box), columnspan = 2)
     tkwait.window(tt)
     stop()
   }
@@ -55,12 +57,13 @@ standards_column_check <- function(CompoundNamesAndFormulasSorted){
     tt <- tktoplevel()
     message_font <- tkfont.create(family = "Times New Roman", size = 14)
     tkwm.title(tt, "Standards Mixture Error")
-    tkgrid(ttklabel(tt, text = "The \"ICMS_StdComp_RefDB_Submission\" sheet in the meta data file did not have the correct column names. \nThere should be column names for \"CompoundName\" and \"Concentration_uM\". \nThese names are case sensitive.",
+    tkgrid(ttklabel(tt, image = error_icon),
+           ttklabel(tt, text = "The \"ICMS_StdComp_RefDB_Submission\" sheet in the meta data file did not have the correct column names. \nThere should be column names for \"CompoundName\" and \"Concentration_uM\". \nThese names are case sensitive.",
                     font = message_font), padx = 20, pady = 20)
     close_box <- function(){
       tkdestroy(tt)
     }
-    tkgrid(tkbutton(tt, text='Okay', command = close_box))
+    tkgrid(tkbutton(tt, text='Okay', command = close_box), columnspan = 2)
     tkwait.window(tt)
     stop()
   }
@@ -82,12 +85,13 @@ standards_values_check <- function(CompoundNamesAndFormulasSorted){
     tt <- tktoplevel()
     message_font <- tkfont.create(family = "Times New Roman", size = 14)
     tkwm.title(tt, "Standards Error")
-    tkgrid(ttklabel(tt, text = "The \"ICMS_StdComp_RefDB_Submission\" sheet in the meta data file does not have data for every CompoundName. \nMake sure every column has values for every CompoundName.",
+    tkgrid(ttklabel(tt, image = error_icon),
+           ttklabel(tt, text = "The \"ICMS_StdComp_RefDB_Submission\" sheet in the meta data file does not have data for every CompoundName. \nMake sure every column has values for every CompoundName.",
                     font = message_font), padx = 20, pady = 20)
     close_box <- function(){
       tkdestroy(tt)
     }
-    tkgrid(tkbutton(tt, text='Okay', command = close_box))
+    tkgrid(tkbutton(tt, text='Okay', command = close_box), columnspan = 2)
     tkwait.window(tt)
     stop()
   }
@@ -107,12 +111,13 @@ metadata_read_check <- function(metadata_file_path){
     tt <- tktoplevel()
     message_font <- tkfont.create(family = "Times New Roman", size = 14)
     tkwm.title(tt, "Meta Data Read Error")
-    tkgrid(ttklabel(tt, text = paste("Error when reading in the \"ICMS_MetaData_Submission\" sheet in the meta data file:\n\n", try_result[1]),
+    tkgrid(ttklabel(tt, image = error_icon),
+           ttklabel(tt, text = paste("Error when reading in the \"ICMS_MetaData_Submission\" sheet in the meta data file:\n\n", try_result[1]),
                     font = message_font), padx = 20, pady = 20)
     close_box <- function(){
       tkdestroy(tt)
     }
-    tkgrid(tkbutton(tt, text='Okay', command = close_box))
+    tkgrid(tkbutton(tt, text='Okay', command = close_box), columnspan = 2)
     tkwait.window(tt)
     stop()
   }
@@ -129,12 +134,13 @@ metadata_empty_check <- function(meta_data){
     tt <- tktoplevel()
     message_font <- tkfont.create(family = "Times New Roman", size = 14)
     tkwm.title(tt, "Meta-Data Error")
-    tkgrid(ttklabel(tt, text = "The \"ICMS_MetaData_Submission\" sheet in the meta data file is empty. \nPlease supply a non-empty sheet.",
+    tkgrid(ttklabel(tt, image = error_icon),
+           ttklabel(tt, text = "The \"ICMS_MetaData_Submission\" sheet in the meta data file is empty. \nPlease supply a non-empty sheet.",
                     font = message_font), padx = 20, pady = 20)
     close_box <- function(){
       tkdestroy(tt)
     }
-    tkgrid(tkbutton(tt, text='Okay', command = close_box))
+    tkgrid(tkbutton(tt, text='Okay', command = close_box), columnspan = 2)
     tkwait.window(tt)
     stop()
   }
@@ -151,12 +157,13 @@ metadata_column_check <- function(meta_data){
     tt <- tktoplevel()
     message_font <- tkfont.create(family = "Times New Roman", size = 14)
     tkwm.title(tt, "Meta-Data Error")
-    tkgrid(ttklabel(tt, text = "The \"ICMS_MetaData_Submission\" sheet in the meta data file did not have the correct column names. \nThere should be column names for \"SampleID\", \"Protein_mg\", \"ICMS_split_ratio\", \"ReconstitutionVolume_uL\", and \"InjectionVolume_uL\". \nThese names are case sensitive.",
+    tkgrid(ttklabel(tt, image = error_icon),
+           ttklabel(tt, text = "The \"ICMS_MetaData_Submission\" sheet in the meta data file did not have the correct column names. \nThere should be column names for \"SampleID\", \"Protein_mg\", \"ICMS_split_ratio\", \"ReconstitutionVolume_uL\", and \"InjectionVolume_uL\". \nThese names are case sensitive.",
                     font = message_font), padx = 20, pady = 20)
     close_box <- function(){
       tkdestroy(tt)
     }
-    tkgrid(tkbutton(tt, text='Okay', command = close_box))
+    tkgrid(tkbutton(tt, text='Okay', command = close_box), columnspan = 2)
     tkwait.window(tt)
     stop()
   }
@@ -181,12 +188,13 @@ metadata_values_check <- function(meta_data){
     tt <- tktoplevel()
     message_font <- tkfont.create(family = "Times New Roman", size = 14)
     tkwm.title(tt, "Meta-Data Error")
-    tkgrid(ttklabel(tt, text = "The \"ICMS_MetaData_Submission\" sheet in the meta data file does not have data for every SampleID. \nMake sure every column has values for every SampleID.",
+    tkgrid(ttklabel(tt, image = error_icon),
+           ttklabel(tt, text = "The \"ICMS_MetaData_Submission\" sheet in the meta data file does not have data for every SampleID. \nMake sure every column has values for every SampleID.",
                     font = message_font), padx = 20, pady = 20)
     close_box <- function(){
       tkdestroy(tt)
     }
-    tkgrid(tkbutton(tt, text='Okay', command = close_box))
+    tkgrid(tkbutton(tt, text='Okay', command = close_box), columnspan = 2)
     tkwait.window(tt)
     stop()
   }
@@ -207,12 +215,13 @@ sequence_read_check <- function(metadata_file_path){
     tt <- tktoplevel()
     message_font <- tkfont.create(family = "Times New Roman", size = 14)
     tkwm.title(tt, "Sequence Data Read Error")
-    tkgrid(ttklabel(tt, text = paste("Error when reading in the \"ICMS_SequenceData_Submission\" sheet in the meta data file:\n\n", try_result[1]),
+    tkgrid(ttklabel(tt, image = error_icon),
+           ttklabel(tt, text = paste("Error when reading in the \"ICMS_SequenceData_Submission\" sheet in the meta data file:\n\n", try_result[1]),
                     font = message_font), padx = 20, pady = 20)
     close_box <- function(){
       tkdestroy(tt)
     }
-    tkgrid(tkbutton(tt, text='Okay', command = close_box))
+    tkgrid(tkbutton(tt, text='Okay', command = close_box), columnspan = 2)
     tkwait.window(tt)
     stop()
   }
@@ -230,12 +239,13 @@ if(nrow(sequence_data) == 0){
   tt <- tktoplevel()
   message_font <- tkfont.create(family = "Times New Roman", size = 14)
   tkwm.title(tt, "Sequence Data Error")
-  tkgrid(ttklabel(tt, text = "The \"ICMS_SequenceData_Submission\" sheet in the meta data file is empty. \nPlease supply a non-empty sheet.",
+  tkgrid(ttklabel(tt, image = error_icon),
+         ttklabel(tt, text = "The \"ICMS_SequenceData_Submission\" sheet in the meta data file is empty. \nPlease supply a non-empty sheet.",
                   font = message_font), padx = 20, pady = 20)
   close_box <- function(){
     tkdestroy(tt)
   }
-  tkgrid(tkbutton(tt, text='Okay', command = close_box))
+  tkgrid(tkbutton(tt, text='Okay', command = close_box), columnspan = 2)
   tkwait.window(tt)
   stop()
 }
@@ -252,12 +262,13 @@ if(!("FileName" %in% colnames(sequence_data))){
     tt <- tktoplevel()
     message_font <- tkfont.create(family = "Times New Roman", size = 14)
     tkwm.title(tt, "Sequence Data Error")
-    tkgrid(ttklabel(tt, text = "The \"ICMS_SequenceData_Submission\" sheet in the meta data file did not have the correct column names. \nThere should be column names for \"File Name\". \nThese names are case sensitive.",
+    tkgrid(ttklabel(tt, image = error_icon),
+           ttklabel(tt, text = "The \"ICMS_SequenceData_Submission\" sheet in the meta data file did not have the correct column names. \nThere should be column names for \"File Name\". \nThese names are case sensitive.",
                     font = message_font), padx = 20, pady = 20)
     close_box <- function(){
       tkdestroy(tt)
     }
-    tkgrid(tkbutton(tt, text='Okay', command = close_box))
+    tkgrid(tkbutton(tt, text='Okay', command = close_box), columnspan = 2)
     tkwait.window(tt)
     stop()
   }
@@ -286,12 +297,13 @@ metadata_in_TF_list <- function(meta_data, SampleNames){
     tt <- tktoplevel()
     message_font <- tkfont.create(family = "Times New Roman", size = 14)
     tkwm.title(tt, "Meta Data Error")
-    tkgrid(ttklabel(tt, text = paste("There is not a matching TraceFinder report for every sample in the \"ICMS_MetaData_Submission\" sheet in the meta data file.\nReports for:\n\n", paste(meta_diff, collapse = "\n"), "\n\ncould not be found.", sep =""),
+    tkgrid(ttklabel(tt, image = error_icon),
+           ttklabel(tt, text = paste("There is not a matching TraceFinder report for every sample in the \"ICMS_MetaData_Submission\" sheet in the meta data file.\nReports for:\n\n", paste(meta_diff, collapse = "\n"), "\n\ncould not be found.", sep =""),
                     font = message_font), padx = 20, pady = 20)
     close_box <- function(){
       tkdestroy(tt)
     }
-    tkgrid(tkbutton(tt, text='Okay', command = close_box))
+    tkgrid(tkbutton(tt, text='Okay', command = close_box), columnspan = 2)
     tkwait.window(tt)
     stop()
   }
@@ -313,12 +325,13 @@ TF_list_in_metadata <- function(meta_data, SampleNamesNoStds){
     tt <- tktoplevel()
     message_font <- tkfont.create(family = "Times New Roman", size = 14)
     tkwm.title(tt, "Meta Data Error")
-    tkgrid(ttklabel(tt, text = paste("There is not a matching entry in the \"ICMS_MetaData_Submission\" sheet in the meta data file for every TraceFinder report.\nEntries for:\n\n", paste(TF_diff, collapse = "\n"), "\n\ncould not be found in the meta data.", sep = ""),
+    tkgrid(ttklabel(tt, image = error_icon),
+           ttklabel(tt, text = paste("There is not a matching entry in the \"ICMS_MetaData_Submission\" sheet in the meta data file for every TraceFinder report.\nEntries for:\n\n", paste(TF_diff, collapse = "\n"), "\n\ncould not be found in the meta data.", sep = ""),
                     font = message_font), padx = 20, pady = 20)
     close_box <- function(){
       tkdestroy(tt)
     }
-    tkgrid(tkbutton(tt, text='Okay', command = close_box))
+    tkgrid(tkbutton(tt, text='Okay', command = close_box), columnspan = 2)
     tkwait.window(tt)
     stop()
   }
@@ -338,12 +351,13 @@ TF_list_in_sequence_data <- function(sequence_data, SampleNames){
     tt <- tktoplevel()
     message_font <- tkfont.create(family = "Times New Roman", size = 14)
     tkwm.title(tt, "Sequence Data Error")
-    tkgrid(ttklabel(tt, text = paste("There is not a matching entry in the \"ICMS_SequenceData_Submission\" sheet in the meta data file for every TraceFinder report.\nEntries for:\n\n", paste(sequence_diff, collapse = "\n"), "\n\ncould not be found in the sequence data.", sep = ""),
+    tkgrid(ttklabel(tt, image = error_icon),
+           ttklabel(tt, text = paste("There is not a matching entry in the \"ICMS_SequenceData_Submission\" sheet in the meta data file for every TraceFinder report.\nEntries for:\n\n", paste(sequence_diff, collapse = "\n"), "\n\ncould not be found in the sequence data.", sep = ""),
                     font = message_font), padx = 20, pady = 20)
     close_box <- function(){
       tkdestroy(tt)
     }
-    tkgrid(tkbutton(tt, text='Okay', command = close_box))
+    tkgrid(tkbutton(tt, text='Okay', command = close_box), columnspan = 2)
     tkwait.window(tt)
     stop()
   }
@@ -365,7 +379,8 @@ standards_in_TF_reports <- function(CompoundNamesAndFormulasSorted, TF_compounds
     tt <- tktoplevel()
     message_font <- tkfont.create(family = "Times New Roman", size = 14)
     tkwm.title(tt, "Standard Mix Warning")
-    tkgrid(ttklabel(tt, text = paste("The following standard compounds in the \"ICMS_StdComp_RefDB_Submission\" \nsheet of the meta data file were not found in the TraceFinder reports:\n\n", paste(standard_diff, collapse = "\n"), "\n\nContinue quantification?", sep = ""),
+    tkgrid(ttklabel(tt, image = warning_icon),
+           ttklabel(tt, text = paste("The following standard compounds in the \"ICMS_StdComp_RefDB_Submission\" \nsheet of the meta data file were not found in the TraceFinder reports:\n\n", paste(standard_diff, collapse = "\n"), "\n\nContinue quantification?", sep = ""),
                     font = message_font), padx = 20, pady = 20)
     continue <- function(){
       tkdestroy(tt)
@@ -376,7 +391,7 @@ standards_in_TF_reports <- function(CompoundNamesAndFormulasSorted, TF_compounds
     }
     tt1 <- tkframe(tt)
     tkgrid(tkbutton(tt1, text='Continue', command = continue, background = "SlateGray1"), tkbutton(tt1, text='Abort', command = abort, background = "SlateGray1"), padx = 20, pady = 15)
-    tkgrid(tt1)
+    tkgrid(tt1, columnspan = 2)
     tkwait.window(tt)
     
     if(abort_flag){
@@ -400,12 +415,13 @@ report_read_check <- function(TF_File){
     tt <- tktoplevel()
     message_font <- tkfont.create(family = "Times New Roman", size = 14)
     tkwm.title(tt, "TraceFinder Report Read Error")
-    tkgrid(ttklabel(tt, text = paste("Error when reading in the TraceFinder report ", TF_File, "  .\n\n", try_result[1]),
+    tkgrid(ttklabel(tt, image = error_icon),
+           ttklabel(tt, text = paste("Error when reading in the TraceFinder report ", TF_File, "  .\n\n", try_result[1]),
                     font = message_font), padx = 20, pady = 20)
     close_box <- function(){
       tkdestroy(tt)
     }
-    tkgrid(tkbutton(tt, text='Okay', command = close_box))
+    tkgrid(tkbutton(tt, text='Okay', command = close_box), columnspan = 2)
     tkwait.window(tt)
     stop()
   }
@@ -421,12 +437,13 @@ report_empty_check <- function(TempMatrix, TF_File){
     tt <- tktoplevel()
     message_font <- tkfont.create(family = "Times New Roman", size = 14)
     tkwm.title(tt, "TraceFinder Report Error")
-    tkgrid(ttklabel(tt, text = paste("The TraceFinder report ", TF_File, " is empty. \nPlease supply a non-empty report."),
+    tkgrid(ttklabel(tt, image = error_icon),
+           ttklabel(tt, text = paste("The TraceFinder report ", TF_File, " is empty. \nPlease supply a non-empty report."),
                     font = message_font), padx = 20, pady = 20)
     close_box <- function(){
       tkdestroy(tt)
     }
-    tkgrid(tkbutton(tt, text='Okay', command = close_box))
+    tkgrid(tkbutton(tt, text='Okay', command = close_box), columnspan = 2)
     tkwait.window(tt)
     stop()
   }
@@ -442,12 +459,13 @@ report_column_check <- function(TempMatrix, TF_File){
     tt <- tktoplevel()
     message_font <- tkfont.create(family = "Times New Roman", size = 14)
     tkwm.title(tt, "TraceFinder Report Error")
-    tkgrid(ttklabel(tt, text = paste("The TraceFinder report ", TF_File, " did not have the correct column names, or the column names are not on row 45. \nThere should be column names for \"Target Compounds\", \"Formula\" and \"Peak Area\". \nThese names are case sensitive."),
+    tkgrid(ttklabel(tt, image = error_icon),
+           ttklabel(tt, text = paste("The TraceFinder report ", TF_File, " did not have the correct column names, or the column names are not on row 45. \nThere should be column names for \"Target Compounds\", \"Formula\" and \"Peak Area\". \nThese names are case sensitive."),
                     font = message_font), padx = 20, pady = 20)
     close_box <- function(){
       tkdestroy(tt)
     }
-    tkgrid(tkbutton(tt, text='Okay', command = close_box))
+    tkgrid(tkbutton(tt, text='Okay', command = close_box), columnspan = 2)
     tkwait.window(tt)
     stop()
   }
@@ -472,12 +490,13 @@ TF_labeling_check <- function(TF_labeling_type){
     tkfocus(tt)
     message_font <- tkfont.create(family = "Times New Roman", size = 14)
     tkwm.title(tt, "Labeling Error")
-    tkgrid(ttklabel(tt, text = "Not all TraceFinder files have the same type of labeling.\nPlease submit TraceFinder files with the same type of labeling.",
+    tkgrid(ttklabel(tt, image = error_icon),
+           ttklabel(tt, text = "Not all TraceFinder files have the same type of labeling.\nPlease submit TraceFinder files with the same type of labeling.",
                     font = message_font), padx = 20, pady = 20)
     close_box <- function(){
       tkdestroy(tt)
     }
-    tkgrid(tkbutton(tt, text='Okay', command = close_box))
+    tkgrid(tkbutton(tt, text='Okay', command = close_box), columnspan = 2)
     tkwait.window(tt)
     
     stop()
