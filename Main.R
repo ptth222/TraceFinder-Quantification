@@ -26,6 +26,7 @@ source("/Users/higashi/Quantification_Script/Functions After Galaxy.R")
 
 
 ## Create image files for warning and error messages.
+## For Windows you may need to use the .gif picture files instead of the.png.
 error_icon <- tclVar()
 tkimage.create("photo", error_icon, file = "/Users/higashi/Quantification_Script/Images/error-icon.png")
 warning_icon <- tclVar()
@@ -122,7 +123,20 @@ SampleNamesNoStds <- SampleNames[!grepl("stds", SampleNames, ignore.case = TRUE)
 ######################################
 
 ## Check that all samples in the meta data file have a matching TF report.
-metadata_in_TF_list(meta_data, SampleNames)
+## I am commenting this out because it appears to not be necessary and it hinders the user,
+## because they can't put extra file names in the metadata file. I say that it appears to be
+## unecessary because the data frame that is built for Galaxy uses the SampleNames from
+## the list of TraceFinder files, and then the functions after Galaxy only use the SampleID's
+## in the meta_data that are also in the file that we get back from Galaxy. So essentially 
+## we only use the names that come from the TF list so we don't need to make sure that all
+## of the names in the meta_data have a matching TF report.
+## I am still wary of commenting this out because I made the check for a reason, and I 
+## would not have made life harder on the user if I didn't have to, but I can't find where
+## not having this check can cause an error. Current users are also bypassing this by running
+## the code in RStudio and the output is identical to modifying the meta data file to be 1-1
+## with the TF list. In other words the output is the same whether you have extra names in
+## the meta data or not.
+#metadata_in_TF_list(meta_data, SampleNames)
 
 ## Check that all TF reports have an entry in the meta data file.
 TF_list_in_metadata(meta_data, SampleNamesNoStds)
@@ -149,6 +163,8 @@ TF_compounds <- gsub("\\[(.*)\\]", "", TempMatrix$Target.Compound)
 ## Check that every standard compound in the database has a match in the TF report.
 standards_in_TF_reports(CompoundNamesAndFormulasSorted, TF_compounds)
 
+## Check that every unique compound has a formula.
+formulas_check(TempMatrix, TF_compounds)
 
 
 ##################################

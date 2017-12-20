@@ -4,7 +4,7 @@
 read_TF_reports <- function(TF_FileList, TempMatrix){
   
   ## Create a matrix to hold peak area values from each report.
-  PeakAreas<-matrix(NA, nrow = dim(TempMatrix)[1]-1, ncol = length(TF_FileList ))
+  PeakAreas<-matrix(NA, nrow = dim(TempMatrix)[1], ncol = length(TF_FileList ))
   
   ## Create a list to keep track of the labeling type of each input TraceFinder file.
   TF_labeling_type <- as.data.frame(TF_FileList, stringsAsFactors = FALSE)
@@ -16,7 +16,7 @@ read_TF_reports <- function(TF_FileList, TempMatrix){
   {
     TempMatrix <- report_read_check(TF_FileList[i])
     report_empty_check(TempMatrix, TF_FileList[i])
-    TempMatrix <- TempMatrix[1:(dim(TempMatrix)[1]-1),]
+    TempMatrix <- TempMatrix[1:(dim(TempMatrix)[1]),]
     TempMatrix <- report_column_check(TempMatrix, TF_FileList[i])
     
     ## Determine the labeling from the pattern in brackets at the end of the first compound name.

@@ -471,6 +471,7 @@ report_column_check <- function(TempMatrix, TF_File){
   }
   
   TempMatrix <- TempMatrix[!is.na(TempMatrix$Target.Compound),]
+  TempMatrix <- TempMatrix[!TempMatrix$Target.Compounds == "",]
   
   return(TempMatrix)
 }
@@ -502,4 +503,34 @@ TF_labeling_check <- function(TF_labeling_type){
     stop()
   }
     
+}
+
+
+############################
+## Check that every unique compound has a formula.
+############################
+
+formulas_check <- function(TF_Report, CompoundListNoLabelling){
+  
+  Temp <- TF_Report
+  Temp$NoLabelling <- CompoundListNoLabelling
+  Temp <- Temp[!duplicated(Temp$NoLabelling),]
+  if (any(Temp$Formula == "")){
+    compounds <- Temp$Target.Compound[Temp$Formula == ""]
+    tt <- tktoplevel()
+    tkfocus(tt)
+    message_font <- tkfont.create(family = "Times New Roman", size = 14)
+    tkwm.title(tt, "Formula Error")
+    tkgrid(ttklabel(tt, image = error_icon),
+           ttklabel(tt, text = paste("Not all compounds in TraceFinder files have a formula.\nWithout the correct formula the natural abundance stripping will be incorrect. \nThe compounds are:\n", paste(compounds, collapse = "\n")),
+                    font = message_font), padx = 20, pady = 20)
+    close_box <- function(){
+      tkdestroy(tt)
+    }
+    tkgrid(tkbutton(tt, text='Okay', command = close_box), columnspan = 2)
+    tkwait.window(tt)
+    
+    stop()
+    
+  }
 }

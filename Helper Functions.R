@@ -17,14 +17,18 @@ read.xlsx_or_csv <- function(filepath, skip = 0, header = FALSE, col_names = TRU
 ## It takes the sequence_file_path given to the program by the user, and strips it down to what is necessary for quantitation.
 gen_sequence_data <- function(sequence_data, tf_sample_id){
   
+  ## Get all names in the sequence data that aren't BLANKS.
   ids <- sequence_data[!grepl("BLANK", sequence_data[, "File Name"], ignore.case = TRUE),]
   
+  ## Get the numerical position of the samples in the sequence.
   seq_data <- data.frame(id = ids, stringsAsFactors = FALSE)
   seq_data$position <- as.numeric(rownames(seq_data))
   
+  ## Seperate the std samples from the real samples.
   std_id <- seq_data$id[grep("stds", seq_data$id, ignore.case = TRUE)]
   sample_data <- seq_data[!seq_data$id %in% std_id,]
   
+  ## Look to see if certain acronyms are in the sample names and remove them.
   for (i in 1:length(sample_data$id))
   {
     if(grepl("ICMS[[:alpha:]]|GCMS[[:alpha:]]", sample_data$id[i], ignore.case = TRUE)){
@@ -42,12 +46,12 @@ gen_sequence_data <- function(sequence_data, tf_sample_id){
     }
   }
   
+  ## Put changed name back in the sequence data.
   seq_data$id[as.numeric(rownames(sample_data))] <- sample_data$id
   
-  ## the unique Sample IDs from galaxy data.
+  ## The unique Sample IDs from input TraceFinder file names.
   samples <- unique(tf_sample_id)
-  ## Removes the time stamp from the sample ID
-  ## Creates a boolean for whether the samples in the seq data are in the galaxy data
+  ## Creates a boolean for whether the samples in the seq data are in the list of TraceFinder file names.
   seq_data$exists <- seq_data$id %in% samples
   ## Returns the sequence data.frame
   return(seq_data)
