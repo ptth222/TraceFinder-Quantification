@@ -93,13 +93,13 @@ for (i in 1:length(TF_FileList))
        {
   SampleNames[i]=strsplit(TF_FileList[i],"/")[[1]][length(strsplit(TF_FileList[i],"/")[[1]])]
   
-  if(grepl("ICMS[[:alpha:]]|GCMS[[:alpha:]]|FTMS[[:alpha:]]", SampleNames[i], ignore.case = TRUE)){
-    
-    SampleNames[i] <- SampleNames[i] %>% gsub(".*Finder_","", .) %>% substr(.,1,nchar(.) - 26)
-    
-  } else if(grepl("FTMS[[:alpha:]]\+[[:alpha:]]", SampleNames[i], ignore.case = TRUE)){
+  if(grepl("FTMS[[:alpha:]]\\+[[:alpha:]]", SampleNames[i], ignore.case = TRUE)){
     
     SampleNames[i] <- SampleNames[i] %>% gsub(".*Finder_","", .) %>% substr(.,1,nchar(.) - 28)
+    
+  } else if(grepl("ICMS[[:alpha:]]|GCMS[[:alpha:]]|FTMS[[:alpha:]]", SampleNames[i], ignore.case = TRUE)){
+    
+    SampleNames[i] <- SampleNames[i] %>% gsub(".*Finder_","", .) %>% substr(.,1,nchar(.) - 26)
     
   } else if(grepl("NMR[[:alpha:]]", SampleNames[i], ignore.case = TRUE)){
     

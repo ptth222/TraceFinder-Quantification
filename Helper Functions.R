@@ -31,13 +31,13 @@ gen_sequence_data <- function(sequence_data, tf_sample_id){
   ## Look to see if certain acronyms are in the sample names and remove them.
   for (i in 1:length(sample_data$id))
   {
-    if(grepl("ICMS[[:alpha:]]|GCMS[[:alpha:]]|FTMS[[:alpha:]]", sample_data$id[i], ignore.case = TRUE)){
-      
-      sample_data$id[i] <- substr(sample_data$id[i], 1, nchar(sample_data$id[i]) - 6)
-      
-    } else if(grepl("FTMS[[:alpha:]]\+[[:alpha:]]", sample_data$id[i], ignore.case = TRUE)){
+    if(grepl("FTMS[[:alpha:]]\\+[[:alpha:]]", sample_data$id[i], ignore.case = TRUE)){
       
       sample_data$id[i] <- substr(sample_data$id[i], 1, nchar(sample_data$id[i]) - 8)
+      
+    } else if(grepl("ICMS[[:alpha:]]|GCMS[[:alpha:]]|FTMS[[:alpha:]]", sample_data$id[i], ignore.case = TRUE)){
+      
+      sample_data$id[i] <- substr(sample_data$id[i], 1, nchar(sample_data$id[i]) - 6)
       
     } else if(grepl("NMR[[:alpha:]]", sample_data$id[i], ignore.case = TRUE)){
       
